@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: HazelcastExample
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password: sa
+    platform: H2
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+server:
+  port: 8081
