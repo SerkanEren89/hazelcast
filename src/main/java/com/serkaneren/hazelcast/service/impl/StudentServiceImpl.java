@@ -1,16 +1,16 @@
 package com.serkaneren.hazelcast.service.impl;
 
-import com.serkaneren.hazelcast.dto.StudentDto;
-import com.serkaneren.hazelcast.mapper.StudentMapper;
+import com.hazelcast.core.HazelcastInstance;
 import com.serkaneren.hazelcast.model.Student;
 import com.serkaneren.hazelcast.repository.StudentRepository;
 import com.serkaneren.hazelcast.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Student service implementation
@@ -23,33 +23,28 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
-    private final StudentMapper studentMapper;
+    private final HazelcastInstance hazelcastInstance;
 
-
-    public StudentServiceImpl(StudentRepository studentRepository,
-                              StudentMapper studentMapper) {
+    @Autowired
+    public StudentServiceImpl(HazelcastInstance hazelcastInstance,
+                              StudentRepository studentRepository) {
+        this.hazelcastInstance = hazelcastInstance;
         this.studentRepository = studentRepository;
-        this.studentMapper = studentMapper;
     }
 
     @Cacheable
     @Override
-    public List<StudentDto> getAllList() {
-        return studentRepository.findAll()
-                .stream().map(studentMapper::toStudentDto)
-                .collect(Collectors.toList());
+    public List<Student> getAllList() {
+        return studentRepository.findAll();
     }
 
     @Override
-    public StudentDto saveStudent(StudentDto studentDto) {
-        Student student = studentRepository.save(studentMapper.toStudent(studentDto));
-        return studentMapper.toStudentDto(student);
+    public List<Student> saveStudents(List<Student> studentList) {
+        return studentRepository.saveAll(studentList);
     }
 
     @Override
-    public List<StudentDto> saveStudents(List<StudentDto> studentDtoList) {
-        List<Student> studentList = studentDtoList.stream().map(studentMapper::toStudent).collect(Collectors.toList());
-        return studentRepository.saveAll(studentList)
-                .stream().map(studentMapper::toStudentDto).collect(Collectors.toList());
+    public Collection<Object> readAllDataFromHazelcast() {
+        return hazelcastInstance.getMap("students").values();
     }
 }

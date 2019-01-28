@@ -36,11 +36,5 @@ dependencies {
 	runtime('com.h2database:h2')
 	apt('org.projectlombok:lombok:1.18.2')
 	compileOnly('org.projectlombok:lombok:1.18.2')
-	apt('org.mapstruct:mapstruct-processor:1.2.0.Final')
-	compileOnly('org.mapstruct:mapstruct-jdk8:1.2.0.Final')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.withType(JavaCompile) {
-	options.compilerArgs = ['-Amapstruct.suppressGeneratorTimestamp=true', '-Amapstruct.defaultComponentModel=spring']
 }

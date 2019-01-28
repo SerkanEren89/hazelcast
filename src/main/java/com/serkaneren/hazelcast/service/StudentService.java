@@ -1,7 +1,8 @@
 package com.serkaneren.hazelcast.service;
 
-import com.serkaneren.hazelcast.dto.StudentDto;
+import com.serkaneren.hazelcast.model.Student;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,21 +18,20 @@ public interface StudentService {
      *
      * @return get list of student
      */
-    List<StudentDto> getAllList();
-
-    /**
-     * Save student
-     *
-     * @param studentDto student dto
-     * @return student dto
-     */
-    StudentDto saveStudent(StudentDto studentDto);
+    List<Student> getAllList();
 
     /**
      * Save list of student
      *
-     * @param studentDtoList student list
+     * @param studentList student list
      * @return list of student
      */
-    List<StudentDto> saveStudents(List<StudentDto> studentDtoList);
+    List<Student> saveStudents(List<Student> studentList);
+
+    /**
+     * Get cached data
+     *
+     * @return cached data
+     */
+    Collection<Object> readAllDataFromHazelcast();
 }
